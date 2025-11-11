@@ -7,12 +7,16 @@ import { removeParticipant } from "@/app/admin/actions";
 
 interface ParticipantListProps {
   participants: Participant[];
+  slug: string;
 }
 
 export default function ParticipantList({
   participants,
+  slug,
 }: ParticipantListProps) {
   const [isPending, startTransition] = useTransition();
+
+  console.log("PATH ->", window.location.origin);
 
   async function handleRemove(participant: Participant) {
     startTransition(async () => {
@@ -40,7 +44,9 @@ export default function ParticipantList({
               key={participant.id}
             >
               <td className="p-4">{participant.name}</td>
-              <td className="p-4">{participant.uuid}</td>
+              <td className="p-4">
+                {window.location.origin}/draw/{slug}/{participant.uuid}
+              </td>
               <td className="p-4 flex pr-10 justify-end">
                 <button
                   className="cursor-pointer"

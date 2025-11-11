@@ -24,7 +24,7 @@ export default async function AdminDrawPage({ params }: AdminDrawPageProps) {
       <h1 className="text-4xl">Participantes para el sorteo {draw.name}</h1>
       <div className="pt-10">
         {participants.length > 0 ? (
-          <ParticipantList participants={participants} />
+          <ParticipantList participants={participants} slug={slug} />
         ) : (
           <div className="w-full h-24 flex items-center justify-center border border-gray-400 rounded-2xl">
             Aún no hay participantes en éste sorteo
