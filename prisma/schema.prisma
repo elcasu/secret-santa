@@ -23,6 +23,7 @@ model Participant {
   chosenBy Int? // id of Participant that chose this person
   drawId Int
   draw Draw @relation(fields: [drawId], references: [id])
+  uuid String
 
   @@index([drawId])
 }

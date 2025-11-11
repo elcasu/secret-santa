@@ -1,3 +1,5 @@
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 import ParticipantList from "@/components/ParticipantList";
 import { getDrawBySlug } from "@/services/draws";
 import { getParticipants } from "@/services/participants";
@@ -8,6 +10,10 @@ interface AdminDrawPageProps {
 }
 
 export default async function AdminDrawPage({ params }: AdminDrawPageProps) {
+  const session = await auth();
+  if (!session) {
+    redirect("/login");
+  }
   const { slug } = await params;
   const draw = await getDrawBySlug(slug);
   if (!draw) return null;

@@ -1,20 +1,25 @@
 "use client";
 import { useEffect, useState } from "react";
+import { Participant } from "@prisma/client";
 
-export default function ParticipantSelect({ slug }: { slug: string }) {
-  const [participants, setParticipants] = useState<
-    { id: number; name: string }[]
-  >([]);
+interface ParticipantSelectProps {
+  slug: string;
+  participants: Participant[];
+  onSelect: (p: Participant) => void;
+}
+
+export default function ParticipantSelect({
+  slug,
+  participants,
+  onSelect,
+}: ParticipantSelectProps) {
   const [selectedId, setSelectedId] = useState<number | null>(null);
-
-  useEffect(() => {
-    fetch(`/api/draws/${slug}/participants`)
-      .then((r) => r.json())
-      .then((data) => setParticipants(data));
-  }, [slug]);
+  const [computing, setComputing] = useState(false);
 
   async function assign() {
     if (!selectedId) return;
+    setComputing(true);
+
     const res = await fetch(`/api/draws/${slug}/assign`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -22,8 +27,8 @@ export default function ParticipantSelect({ slug }: { slug: string }) {
     });
     const json = await res.json();
     if (res.ok) {
-      // redirect to show result (we let the draw page handle the animation)
-      window.location.reload();
+      console.log("Assigned to ->", json.assignedTo);
+      onSelect(json.assignedTo as Participant);
     } else {
       alert(json.error || "Error");
     }
@@ -45,8 +50,9 @@ export default function ParticipantSelect({ slug }: { slug: string }) {
         ))}
       </select>
       <button
+        disabled={!selectedId || computing}
+        className="px-4 py-2 bg-indigo-600 text-white rounded disabled:bg-gray-400 w-full"
         onClick={assign}
-        className="px-4 py-2 bg-indigo-600 text-white rounded"
       >
         Sortear
       </button>

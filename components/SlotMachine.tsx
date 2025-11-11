@@ -2,15 +2,14 @@
 
 import { motion, useAnimation } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-
-type Item = { id: number; name: string };
+import { Participant } from "@prisma/client";
 
 export default function SlotMachine({
   items,
   targetName,
   onComplete,
 }: {
-  items: Item[];
+  items: Participant[];
   targetName?: string;
   onComplete?: () => void;
 }) {

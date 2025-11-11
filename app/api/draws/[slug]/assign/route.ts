@@ -6,7 +6,7 @@ export async function POST(
   req: Request,
   { params }: { params: { slug: string } }
 ) {
-  const { slug } = params;
+  const { slug } = await params;
   const { participantId } = await req.json();
   if (!participantId)
     return NextResponse.json(
@@ -25,16 +25,17 @@ export async function POST(
   const participants = draw.participants;
 
   // get list of available participants (not chosen yet) and not self
-  const available = participants.filter(
-    (p) => p.chosenBy == null && p.id !== participantId
-  );
+  // const available = participants.filter(
+  //   (p) => p.chosenBy == null && p.id !== participantId
+  // );
+  const available = participants;
 
-  if (available.length === 0) {
-    return NextResponse.json(
-      { error: "no available participants" },
-      { status: 400 }
-    );
-  }
+  //if (available.length === 0) {
+  //  return NextResponse.json(
+  //    { error: "no available participants" },
+  //    { status: 400 }
+  //  );
+  //}
 
   // pick random
   const chosen = available[Math.floor(Math.random() * available.length)];
