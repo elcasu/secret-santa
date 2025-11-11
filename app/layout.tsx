@@ -1,4 +1,5 @@
 import "./globals.css";
+import "@radix-ui/themes/styles.css";
 import { ReactNode } from "react";
 
 export const metadata = {

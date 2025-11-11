@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+import { Spinner } from "@radix-ui/themes";
 import { Participant } from "@prisma/client";
 import RevealTarget from "@/components/RevealTarget";
 import DrawButton from "@/components/DrawButton";
@@ -47,6 +48,10 @@ export default function DrawPage() {
     setTarget(p);
   };
 
+  if (!currentParticipant) {
+    return <Spinner />;
+  }
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-semibold text-center border-b border-gray-300 pb-5">
@@ -74,6 +79,9 @@ export default function DrawPage() {
 
       <div id="animation-root" className="mt-6">
         {!!target && <RevealTarget target={target.name} />}
+      </div>
+      <div className="text-center">
+        El valor base para el regalo es de $25,000
       </div>
     </div>
   );
