@@ -16,22 +16,31 @@ export default function RevealTarget({ target }: { target: string }) {
       >
         Tu amigo invisible es...
       </motion.div>
-      <motion.div
-        className="text-6xl font-extrabold w-full flex items-center justify-center h-48 text-center text-blue-700"
-        initial={{
-          opacity: 0,
-          scale: 0,
-        }}
-        animate={{
-          opacity: 1,
-          scale: 1,
-        }}
-        transition={{
-          delay: 1,
-        }}
+      <div
+        style={
+          {
+            "--color1": "#9f0712",
+            "--color2": "#016630",
+          } as React.CSSProperties
+        }
       >
-        {target}
-      </motion.div>
+        <motion.div
+          className="text-6xl font-extrabold w-full flex items-center justify-center h-48 text-center color-switch text-green-800"
+          initial={{
+            opacity: 0,
+            scale: 0,
+          }}
+          animate={{
+            opacity: 1,
+            scale: 1,
+          }}
+          transition={{
+            delay: 1,
+          }}
+        >
+          {target}
+        </motion.div>
+      </div>
     </>
   );
 }
