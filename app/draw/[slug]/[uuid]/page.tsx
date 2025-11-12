@@ -81,7 +81,8 @@ export default function DrawPage() {
         {!!target && <RevealTarget target={target.name} />}
       </div>
       <div className="text-center">
-        El valor base para el regalo es de $25,000
+        El valor base para el regalo es de{" "}
+        <span className="font-bold">$25,000</span>
       </div>
     </div>
   );
