@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition } from "react";
+import { useTransition, useState, useEffect } from "react";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { Participant } from "@prisma/client";
 import { removeParticipant } from "@/app/admin/actions";
@@ -18,6 +18,12 @@ export default function ParticipantList({
 }: ParticipantListProps) {
   const confirm = useConfirm();
   const [isPending, startTransition] = useTransition();
+  const [origin, setOrigin] = useState("");
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setOrigin(window.location.origin);
+  }, []);
 
   async function handleRemove(participant: Participant) {
     const ok = await confirm({
@@ -32,6 +38,7 @@ export default function ParticipantList({
       });
     }
   }
+
   return (
     <div>
       <table className="w-full text-left table-auto min-w-max">
@@ -55,9 +62,9 @@ export default function ParticipantList({
             >
               <td className="p-4">{participant.name}</td>
               <td className="p-4">
-                {!!window && (
+                {!!origin && (
                   <>
-                    {window?.location?.origin}/draw/{slug}/{participant.uuid}
+                    {origin}/draw/{slug}/{participant.uuid}
                   </>
                 )}
               </td>
