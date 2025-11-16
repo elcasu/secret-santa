@@ -31,3 +31,10 @@ export async function removeParticipant(participant: Participant) {
 
   revalidatePath(`/admin/draws/${draw!.slug}`);
 }
+
+export async function getParticipant(id: number) {
+  const participant = await prisma.participant.findUnique({
+    where: { id },
+  });
+  return participant;
+}

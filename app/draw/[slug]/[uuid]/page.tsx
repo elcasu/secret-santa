@@ -1,55 +1,24 @@
-"use client";
-import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
-import { Spinner } from "@radix-ui/themes";
-import { Participant } from "@prisma/client";
-import RevealTarget from "@/components/RevealTarget";
-import DrawButton from "@/components/DrawButton";
+"use server";
+import { getParticipants } from "@/services/participants";
+import { getDrawBySlug } from "@/services/draws";
+import DrawComponent from "@/components/DrawComponent";
+import EmptyView from "@/components/EmptyView";
 
-export default function DrawPage() {
-  const [participants, setParticipants] = useState<Participant[]>([]);
-  const [currentParticipant, setCurrentParticipant] = useState<
-    Participant | undefined
-  >();
-  const [target, setTarget] = useState<Participant | undefined>();
-  const [loaded, setLoaded] = useState(false);
-  const { slug, uuid } = useParams();
+interface DrawPageProps {
+  params: Promise<{ slug: string; uuid: string }>;
+}
+
+export default async function DrawPage({ params }: DrawPageProps) {
+  const { slug, uuid } = await params;
   if (!slug) return null;
+  const draw = await getDrawBySlug(slug);
+  if (!draw) return null;
 
-  useEffect(() => {
-    fetch(`/api/draws/${slug}/participants`)
-      .then((r) => r.json())
-      .then((data) => setParticipants(data));
-  }, [slug]);
-
-  useEffect(() => {
-    if (!participants?.length) return;
-    setCurrentParticipant(participants.find((p) => p.uuid === uuid));
-  }, [participants]);
-
-  useEffect(() => {
-    if (!currentParticipant) return;
-    if (currentParticipant?.assignedTo) {
-      setTarget(
-        participants.find((p) => p.id === currentParticipant.assignedTo)
-      );
-      return;
-    }
-    setLoaded(true);
-  }, [currentParticipant]);
-
-  useEffect(() => {
-    if (target) {
-      setLoaded(true);
-    }
-  }, [target]);
-
-  const handleSelect = (p: Participant) => {
-    setTarget(p);
-  };
+  const participants = await getParticipants(draw);
+  const currentParticipant = participants.find((p) => p.uuid === uuid);
 
   if (!currentParticipant) {
-    return <Spinner />;
+    return <EmptyView className="mt-10">No existe el participante</EmptyView>;
   }
 
   return (
@@ -63,23 +32,7 @@ export default function DrawPage() {
           <span className="font-bold">{currentParticipant.name}</span>!
         </h3>
       )}
-      {loaded && !currentParticipant?.assignedTo && (
-        <>
-          <p>
-            Por favor, para elegir a tu amigo invisible, presioná{" "}
-            <strong>Sortear</strong>.
-          </p>
-          <DrawButton
-            slug={slug as string}
-            drawer={currentParticipant as Participant}
-            onSelect={handleSelect}
-          />
-        </>
-      )}
-
-      <div id="animation-root" className="mt-6">
-        {!!target && <RevealTarget target={target.name} />}
-      </div>
+      <DrawComponent currentParticipant={currentParticipant} slug={slug} />
       <div className="text-center">
         El valor base para el regalo es de{" "}
         <span className="font-bold">$25,000</span>

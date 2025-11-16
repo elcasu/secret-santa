@@ -1,4 +1,4 @@
-import { Draw, Participant } from "@prisma/client";
+import { Participant } from "@prisma/client";
 import { useState } from "react";
 
 interface DrawButtonProps {
@@ -24,7 +24,6 @@ export default function DrawButton({
     });
     const json = await res.json();
     if (res.ok) {
-      console.log("Assigned to ->", json.assignedTo);
       onSelect(json.assignedTo as Participant);
     } else {
       alert(json.error || "Error");
