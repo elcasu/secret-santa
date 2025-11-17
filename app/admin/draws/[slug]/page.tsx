@@ -4,6 +4,7 @@ import ParticipantList from "@/components/ParticipantList";
 import { getDrawBySlug } from "@/services/draws";
 import { getParticipants } from "@/services/participants";
 import CreateParticipant from "@/components/CreateParticipant";
+import EmptyView from "@/components/EmptyView";
 
 interface AdminDrawPageProps {
   params: { slug: string };
@@ -26,9 +27,7 @@ export default async function AdminDrawPage({ params }: AdminDrawPageProps) {
         {participants.length > 0 ? (
           <ParticipantList participants={participants} slug={slug} />
         ) : (
-          <div className="w-full h-24 flex items-center justify-center border border-gray-400 rounded-2xl">
-            Aún no hay participantes en éste sorteo
-          </div>
+          <EmptyView>Aún no hay participantes en éste sorteo</EmptyView>
         )}
       </div>
       <div className="pt-8">
